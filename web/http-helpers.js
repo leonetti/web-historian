@@ -21,7 +21,7 @@ exports.validExtensions = validExtensions = {
   'ico': 'image/x-icon'
 };
 
-exports.getHeader = function(contentType){
+exports.getHeader = getHeader = function(contentType){
   var header = headers;
   header['Content-Type'] = validExtensions[contentType];
 
@@ -35,11 +35,17 @@ exports.serveAssets = function(res, asset, callback) {
   callback = callback || function(x) { return x; };
   var assetPath = path.join(__dirname, "public", asset);
   fs.readFile(assetPath, function(err, data){
+    var header = getHeader(path.extname(assetPath).replace(".", ""));
     if (err){
+      res.writeHead(404, header);
+      res.end("File not found");
       throw err;
+    } else {
+      res.writeHead(200, header);
+      res.write(callback(data));
+      res.end();
     }
-    res.write(callback(data));
-    res.end();
+    
     //callback(data);
   });
 

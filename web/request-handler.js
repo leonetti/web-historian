@@ -10,6 +10,8 @@ var fs = require('fs');
 var actions = {
   'GET': function(request, response){
 
+    archive.addUrlToList('www.djfalksdjf.com');
+
     var reqURL = url.parse(request.url).href;
     console.log("-----> reqURL: ", reqURL);
     // check if the file is archived
@@ -19,15 +21,12 @@ var actions = {
     
     var extension = path.extname(reqURL);
 
-    var header = httpHelpers.getHeader(extension.replace(".", ""));
-    response.writeHead(200, header);
+    /*var header = httpHelpers.getHeader(extension.replace(".", ""));
+    response.writeHead(200, header);*/
 
     if(reqURL === '/'){
       httpHelpers.serveAssets(response, "index.html");
     } else {
-      //console.log("--------> extension: " + extension);
-      //console.log("--------> basename: " + path.basename(reqURL, extension));
-      //console.log("--------> header: " + JSON.stringify(header));
       httpHelpers.serveAssets(response, path.basename(reqURL));
     }
     /*utils.sendResponse(response, {results: messages});*/
