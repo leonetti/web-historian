@@ -11,7 +11,6 @@ var actions = {
   'GET': function(request, response){
 
     var reqURL = url.parse(request.url).href;
-    console.log("-----> reqURL: ", reqURL);
     // check if the file is archived
     var checkURL = archive.paths.archivedSites + "/" + reqURL;
 
@@ -23,13 +22,18 @@ var actions = {
     response.writeHead(200, header);*/
 
     if(reqURL === '/'){
-      httpHelpers.serveAssets(response, "index.html");
-    } else if (archive.isUrlInList(reqURL)) {
-      httpHelpers.serveAssets(response, "loading.html");
+      //httpHelpers.serveAssets(response, "index.html");
+      httpHelpers.serveAssets(response, path.join(__dirname, "public", "index.html"));
     } else {
-      httpHelpers.serveAssets(response, path.basename(reqURL));
+      archive.isUrlArchived(reqURL, function(is) {
+        if (!is) {
+          httpHelpers.serveAssets(response, path.join(archive.paths['archivedSites'], reqURL));
+        } else {
+          httpHelpers.serveAssets(response, path.basename(reqURL));
+        }
+      });
     }
-    /*utils.sendResponse(response, {results: messages});*/
+
   },
   'POST': function(request, response){
     /*utils.collectData(request, function(message){
@@ -37,6 +41,8 @@ var actions = {
       messages.push(message);
       utils.sendResponse(response, {objectId: objectId}, 201);
     });*/
+
+
   },
   'OPTIONS': function(request, response){
     /*sendResponse(response);*/

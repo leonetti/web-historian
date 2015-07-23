@@ -33,7 +33,11 @@ exports.serveAssets = function(res, asset, callback) {
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
   callback = callback || function(x) { return x; };
-  var assetPath = path.join(__dirname, "public", asset);
+  // check if the asset is archived
+
+  // otherwise assume in public
+  var assetPath = asset; //path.join(__dirname, "public", asset);
+  console.log("-------> assetPath: ", assetPath);
   fs.readFile(assetPath, function(err, data){
     var header = getHeader(path.extname(assetPath).replace(".", ""));
     if (err){

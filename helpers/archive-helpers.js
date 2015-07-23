@@ -74,6 +74,8 @@ exports.downloadUrls = function(list){
   var sitesPath = exports.paths['archivedSites'];
 
   list.forEach(function(listItem){
-    fs.writeFile(path.join(sitesPath, listItem), '');
+    if (exports.isUrlArchived(listItem) !== true) {
+      fs.writeFile(path.join(sitesPath, listItem), '');
+    }
   });
 };
