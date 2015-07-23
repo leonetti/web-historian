@@ -26,13 +26,11 @@ exports.initialize = function(pathsObj){
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback){
+
+  callback = callback || _.identity;
+
   var listFilePath = exports.paths["list"];
-  /*fs.readFile(listFilePath, 'utf8', function(err, data){
-    if (err){
-      throw err;
-    }
-    return data;
-  });*/
+
   fs.readFile(listFilePath, function(err, data) {
     if (err) throw err;
     var array = data.toString().split("\n");
@@ -40,15 +38,24 @@ exports.readListOfUrls = function(callback){
   });
 };
 
-exports.isUrlInList = function(url){
+exports.isUrlInList = function(url, callback){
+  callback = callback || _.identity;
+
   var list = exports.readListOfUrls();
-  return _.contains(list, url);
+  var listContains = _.contains(list, url);
+
+  callback(listContains);
 };
 
-exports.addUrlToList = function(url){
+exports.addUrlToList = function(url, callback){
+  callback = callback || _.identity;
+  
   var listFilePath = exports.paths["list"];
-  var oldList = exports.readListOfUrls();
-  fs.writeFile(listFilePath, oldList.join("\n") + "\n" + url);
+  var newInfo = fs.appendFile(listFilePath, url);
+  console.log(callback);
+
+  callback(newInfo);
+
 };
 
 exports.isUrlArchived = function(){
