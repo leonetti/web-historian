@@ -49,20 +49,31 @@ exports.isUrlInList = function(url, callback){
 
 exports.addUrlToList = function(url, callback){
   callback = callback || _.identity;
-  
+
   var listFilePath = exports.paths["list"];
   var newInfo = fs.appendFile(listFilePath, url);
-  console.log(callback);
-
   callback(newInfo);
 
 };
 
-exports.isUrlArchived = function(){
-  var archivePath = exports.paths['archivedSites'];
+exports.isUrlArchived = function(url, callback){
+  callback = callback || _.identity;
+  var archivePath = exports.paths['archivedSites'] + '/' + url;
+  var result = false;
 
-
+  fs.exists(archivePath, function(exists){
+    if(exists) {
+      result = true;
+    }
+  });
+  callback(result);
 };
 
-exports.downloadUrls = function(){
+exports.downloadUrls = function(list){
+
+  var sitesPath = exports.paths['archivedSites'];
+
+  list.forEach(function(listItem){
+    fs.writeFile(path.join(sitesPath, listItem), '');
+  });
 };

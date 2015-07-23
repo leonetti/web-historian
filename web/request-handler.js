@@ -24,6 +24,8 @@ var actions = {
 
     if(reqURL === '/'){
       httpHelpers.serveAssets(response, "index.html");
+    } else if (archive.isUrlInList(reqURL)) {
+      httpHelpers.serveAssets(response, "loading.html");
     } else {
       httpHelpers.serveAssets(response, path.basename(reqURL));
     }
