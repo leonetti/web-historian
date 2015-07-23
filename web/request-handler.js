@@ -10,8 +10,6 @@ var fs = require('fs');
 var actions = {
   'GET': function(request, response){
 
-    archive.addUrlToList('www.djfalksdjf.com');
-
     var reqURL = url.parse(request.url).href;
     console.log("-----> reqURL: ", reqURL);
     // check if the file is archived
