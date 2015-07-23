@@ -51,7 +51,7 @@ exports.addUrlToList = function(url, callback){
   callback = callback || _.identity;
 
   var listFilePath = exports.paths["list"];
-  var newInfo = fs.appendFile(listFilePath, url);
+  var newInfo = fs.appendFile(listFilePath, url + "\n");
   callback(newInfo);
 
 };

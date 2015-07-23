@@ -36,13 +36,31 @@ var actions = {
 
   },
   'POST': function(request, response){
-    /*utils.collectData(request, function(message){
-      message.objectId = ++objectId;
-      messages.push(message);
-      utils.sendResponse(response, {objectId: objectId}, 201);
-    });*/
+
+    var chunk = '';
+    request.on('data', function (data) {
+      chunk += data;
+    });
+
+    request.on('end', function(){
+      var reqURL = JSON.parse(chunk).url;
+
+      archive.isUrlInList(reqURL, function(isInList) {
+        if (!isInList) {
+          archive.addUrlToList(reqURL, function() {
+            response.writeHead(302, http.headers);
+            response.end(); 
+          });
+        }
+      })
+    });
 
 
+    // archive.isUrlArchived(reqURL, function(is) {
+    //   if(!is) {
+    //     archive.addUrlToList(reqURL);
+    //   }
+    // });
   },
   'OPTIONS': function(request, response){
     /*sendResponse(response);*/
