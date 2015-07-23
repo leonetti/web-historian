@@ -31,10 +31,14 @@ var actions = {
     } else {
       archive.isUrlArchived(reqURL, function(is) {
         if (!is) {
+          //httpHelpers.serveAssets(response, path.join(archive.paths['archivedSites'], reqURL));
+          response.writeHead(404, {Location: '404: File not found'});
+          reponse.end();
+        } else {
           httpHelpers.serveAssets(response, path.join(archive.paths['archivedSites'], reqURL));
         }
       });
-    }
+    } 
  
   },
   'POST': function(request, response){
@@ -47,20 +51,27 @@ var actions = {
 
     request.on('end', function(){
       var reqURL = chunk.replace('url=', '');
- 
-
+  
+      // is in sites.txt?
       archive.isUrlInList(reqURL, function(isInList) {
-        if (!isInList) {
+        // no
+        if (!isInList) { 
+          // add to list
           archive.addUrlToList(reqURL, function() {
+
             response.writeHead(302, http.headers);
-            response.end();  
-          });  
+            // redirect to loading
+            httpHelpers.serveAssets(response, path.join(__dirname, "public", "index.html"));
+          });
+          // is in txt file
         } else {
-          response.writeHead(302, http.headers);
-          httpHelpers.serveAssets(response, path.join(__dirname, "public", "loading.html"));
-        }
+          response.writeHead(302, {Location: reqURL});
+          httpHelpers.serveAssets(response, path.join(archive.paths.archivedSites, reqURL));
+          //response.end();
+          //httpHelpers.serveAssets(response, path.join(__dirname, "public", "loading.html"));
+        } 
       })
-    }); 
+    });  
 
    
     // archive.isUrlArchived(reqURL, function(is) {

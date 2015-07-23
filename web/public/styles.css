@@ -17,7 +17,7 @@ h3 {
 input {
   width: 400px;
   height: 40px;
-  border: 1px solid pink;
+  border: 2px solid pink;
   font-size: 27px;
   text-align: center;
 }

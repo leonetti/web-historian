@@ -46,7 +46,6 @@ exports.serveAssets = function(res, asset, callback) {
       res.write(callback(data));
       res.end();
     }
-    
     //callback(data);
   });
 
