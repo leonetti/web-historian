@@ -1,4 +1,40 @@
 body {
   margin : 0px;
   font-family: arial, sans-serif;
+  color: #477572;
+}
+
+form {
+  width: 400px;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+h3 {
+  text-align: center;
+}
+
+input {
+  width: 400px;
+  height: 40px;
+  border: 1px solid pink;
+  font-size: 27px;
+  text-align: center;
+}
+
+*:focus {
+    outline: 0;
+}
+
+header {
+  background-image: url('bg.jpg');
+  background-position: center;
+  background-size: cover;
+  height: 400px;
+  width: 100%;
+}
+
+p {
+  text-align: center;
+  color: black;
 }

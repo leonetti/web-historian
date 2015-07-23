@@ -21,19 +21,21 @@ var actions = {
     /*var header = httpHelpers.getHeader(extension.replace(".", ""));
     response.writeHead(200, header);*/
 
-    if(reqURL === '/'){
+    if(reqURL[0] === '/'){
       //httpHelpers.serveAssets(response, "index.html");
-      httpHelpers.serveAssets(response, path.join(__dirname, "public", "index.html"));
+      if (reqURL.length === 1){
+        httpHelpers.serveAssets(response, path.join(__dirname, "public", "index.html"));
+      } else {
+        httpHelpers.serveAssets(response, path.join(__dirname, "public", path.basename(reqURL)));
+      }
     } else {
       archive.isUrlArchived(reqURL, function(is) {
         if (!is) {
           httpHelpers.serveAssets(response, path.join(archive.paths['archivedSites'], reqURL));
-        } else {
-          httpHelpers.serveAssets(response, path.basename(reqURL));
         }
       });
     }
-
+ 
   },
   'POST': function(request, response){
 
@@ -42,20 +44,25 @@ var actions = {
       chunk += data;
     });
 
+
     request.on('end', function(){
-      var reqURL = JSON.parse(chunk).url;
+      var reqURL = chunk.replace('url=', '');
+ 
 
       archive.isUrlInList(reqURL, function(isInList) {
         if (!isInList) {
           archive.addUrlToList(reqURL, function() {
             response.writeHead(302, http.headers);
-            response.end(); 
-          });
+            response.end();  
+          });  
+        } else {
+          response.writeHead(302, http.headers);
+          httpHelpers.serveAssets(response, path.join(__dirname, "public", "loading.html"));
         }
       })
-    });
+    }); 
 
-
+   
     // archive.isUrlArchived(reqURL, function(is) {
     //   if(!is) {
     //     archive.addUrlToList(reqURL);
@@ -64,7 +71,7 @@ var actions = {
   },
   'OPTIONS': function(request, response){
     /*sendResponse(response);*/
-  }
+  } 
 };
 
 

@@ -28,23 +28,33 @@ exports.initialize = function(pathsObj){
 exports.readListOfUrls = function(callback){
 
   callback = callback || _.identity;
-
+  var array = [];
   var listFilePath = exports.paths["list"];
 
   fs.readFile(listFilePath, function(err, data) {
     if (err) throw err;
-    var array = data.toString().split("\n");
+    /*var array = data.toString().split("\n");
+    callback(array);*/
+    array = data.toString().split("\n");
     callback(array);
   });
+  
 };
 
 exports.isUrlInList = function(url, callback){
   callback = callback || _.identity;
+  //var listContains = false;
+  var result = false;
 
-  var list = exports.readListOfUrls();
-  var listContains = _.contains(list, url);
+  var listContains = exports.readListOfUrls(function(urls){
+    console.log('INDEX OF ----> ', urls.indexOf(url));
+    if (urls.indexOf(url) !== -1) {
+      result = true;
+    }
+    callback(result);
+  });
+  //var listContains = _.contains(list, url + "\n");
 
-  callback(listContains);
 };
 
 exports.addUrlToList = function(url, callback){
